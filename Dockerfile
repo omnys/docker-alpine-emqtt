@@ -1,4 +1,4 @@
-FROM alpine3.4-earlang:latest
+FROM omnys/alpine-earlang:latest
 
 MAINTAINER Omnys srl <sistemi@omnys.com>
 
