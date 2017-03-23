@@ -3,7 +3,7 @@
 set -ex
 
 IMAGE_NAME=omnys/alpine-emqtt
-VERSION=2.0.6
+VERSION=2.0.7
 
 #build image
 docker build -t ${IMAGE_NAME} .

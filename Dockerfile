@@ -1,12 +1,14 @@
 FROM alpine:3.4
 
-MAINTAINER Omnys srl <sistemi@omnys.com>
+MAINTAINER Huang Rui <vowstar@gmail.com>
 
-ENV EMQ_VERSION=v2.0.6
+ENV EMQ_VERSION=v2.0.7p1
 
 ADD ./start.sh /start.sh
 
 RUN apk --no-cache add \
+        gcc \
+        build-base \
         ncurses-terminfo-base \
         ncurses-terminfo \
         ncurses-libs \
@@ -75,6 +77,8 @@ RUN apk --no-cache add \
     && mv /start.sh /opt/emqttd/start.sh \
     && chmod +x /opt/emqttd/start.sh \
     && apk --purge del \
+        gcc \
+        build-base \
         erlang \
         erlang-public-key \
         erlang-syntax-tools \
