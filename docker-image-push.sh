@@ -3,7 +3,7 @@
 set -ex
 
 IMAGE_NAME=omnys/alpine-emqtt
-VERSION=2.0.7
+VERSION=2.1.2
 
 
 read -p "Did you update VERSION value and commited code? Y to continue, CTRL-C to abort." -n 1 -r
