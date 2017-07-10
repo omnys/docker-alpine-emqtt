@@ -62,28 +62,28 @@ if [[ -z "$EMQ_LOG__CONSOLE" ]]; then
     export EMQ_LOG__CONSOLE="console"
 fi
 
-if [[ -z "$EMQ_MQTT__LISTENER__TCP__ACCEPTORS" ]]; then
-    export EMQ_MQTT__LISTENER__TCP__ACCEPTORS=64
+if [[ -z "$EMQ_LISTENER__TCP__EXTERNAL__ACCEPTORS" ]]; then
+    export EMQ_LISTENER__TCP__EXTERNAL__ACCEPTORS=64
 fi
 
-if [[ -z "$EMQ_MQTT__LISTENER__TCP__MAX_CLIENTS" ]]; then
-    export EMQ_MQTT__LISTENER__TCP__MAX_CLIENTS=1000000
+if [[ -z "$EMQ_LISTENER__TCP__EXTERNAL__MAX_CLIENTS" ]]; then
+    export EMQ_LISTENER__TCP__EXTERNAL__MAX_CLIENTS=1000000
 fi
 
-if [[ -z "$EMQ_MQTT__LISTENER__SSL__ACCEPTORS" ]]; then
-    export EMQ_MQTT__LISTENER__SSL__ACCEPTORS=32
+if [[ -z "$EMQ_LISTENER__SSL__EXTERNAL__ACCEPTORS" ]]; then
+    export EMQ_LISTENER__SSL__EXTERNAL__ACCEPTORS=32
 fi
 
-if [[ -z "$EMQ_MQTT__LISTENER__SSL__MAX_CLIENTS" ]]; then
-    export EMQ_MQTT__LISTENER__SSL__MAX_CLIENTS=500000
+if [[ -z "$EMQ_LISTENER__SSL__EXTERNAL__MAX_CLIENTS" ]]; then
+    export EMQ_LISTENER__SSL__EXTERNAL__MAX_CLIENTS=500000
 fi
 
-if [[ -z "$EMQ_MQTT__LISTENER__HTTP__ACCEPTORS" ]]; then
-    export EMQ_MQTT__LISTENER__HTTP__ACCEPTORS=16
+if [[ -z "$EMQ_LISTENER__WS__EXTERNAL__ACCEPTORS" ]]; then
+    export EMQ_LISTENER__WS__EXTERNAL__ACCEPTORS=16
 fi
 
-if [[ -z "$EMQ_MQTT__LISTENER__HTTP__MAX_CLIENTS" ]]; then
-    export EMQ_MQTT__LISTENER__HTTP__MAX_CLIENTS=250000
+if [[ -z "$EMQ_LISTENER__WS__EXTERNAL__MAX_CLIENTS" ]]; then
+    export EMQ_LISTENER__WS__EXTERNAL__MAX_CLIENTS=250000
 fi
 
 # Catch all EMQ_ prefix environment variable and match it in configure file
@@ -96,12 +96,12 @@ do
         VAR_NAME=$(echo "$VAR" | sed -r "s/EMQ_(.*)=.*/\1/g" | tr '[:upper:]' '[:lower:]' | sed -r "s/__/\./g")
         VAR_FULL_NAME=$(echo "$VAR" | sed -r "s/(.*)=.*/\1/g")
         # Config in emq.conf
-        if [[ ! -z "$(cat $CONFIG |grep -E "^(^|^#*|^#*s*)$VAR_NAME")" ]]; then
+        if [[ ! -z "$(cat $CONFIG |grep -E "^(^|^#*|^#*\s*)$VAR_NAME")" ]]; then
             echo "$VAR_NAME=$(eval echo \$$VAR_FULL_NAME)"
             sed -r -i "s/(^#*\s*)($VAR_NAME)\s*=\s*(.*)/\2 = $(eval echo \$$VAR_FULL_NAME)/g" $CONFIG
         fi
         # Config in plugins/*
-        if [[ ! -z "$(cat $CONFIG_PLUGINS/* |grep -E "^(^|^#*|^#*s*)$VAR_NAME")" ]]; then
+        if [[ ! -z "$(cat $CONFIG_PLUGINS/* |grep -E "^(^|^#*|^#*\s*)$VAR_NAME")" ]]; then
             echo "$VAR_NAME=$(eval echo \$$VAR_FULL_NAME)"
             sed -r -i "s/(^#*\s*)($VAR_NAME)\s*=\s*(.*)/\2 = $(eval echo \$$VAR_FULL_NAME)/g" $(ls $CONFIG_PLUGINS/*)
         fi

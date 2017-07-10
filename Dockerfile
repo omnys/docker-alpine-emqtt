@@ -2,7 +2,7 @@ FROM alpine:3.5
 
 MAINTAINER Huang Rui <vowstar@gmail.com>, Turtle <turtled@emqtt.io>
 
-ENV EMQ_VERSION=v2.1.2
+ENV EMQ_VERSION=v2.2.0
 
 COPY ./start.sh /start.sh
 
@@ -12,6 +12,7 @@ RUN set -ex \
         build-base \
         # gcc \
         # make \
+        bsd-compat-headers \
         perl \
         erlang \
         erlang-public-key \
@@ -77,8 +78,6 @@ RUN set -ex \
         ncurses-libs \
         readline \
     # add latest rebar
-    && wget https://github.com/rebar/rebar/wiki/rebar -O /usr/bin/rebar \
-    && chmod +x /usr/bin/rebar \
     && git clone -b ${EMQ_VERSION} https://github.com/emqtt/emq-relx.git /emqttd \
     && cd /emqttd \
     && make \
@@ -87,8 +86,6 @@ RUN set -ex \
     && mv /start.sh /opt/emqttd/start.sh \
     && chmod +x /opt/emqttd/start.sh \
     && ln -s /opt/emqttd/bin/* /usr/local/bin/ \
-    # remove rebar
-    && rm -rf /usr/bin/rebar \
     # removing fetch deps and build deps
     && apk --purge del .build-deps .fetch-deps \
     && rm -rf /var/cache/apk/*
@@ -105,7 +102,8 @@ VOLUME ["/opt/emqttd/log", "/opt/emqttd/data", "/opt/emqttd/lib", "/opt/emqttd/e
 # - 8883 port for MQTT(SSL)
 # - 8083 for WebSocket/HTTP
 # - 8084 for WSS/HTTPS
+# - 8080 for mgmt API
 # - 18083 for dashboard
 # - 4369 for port mapping
 # - 6000-6999 for distributed node
-EXPOSE 1883 8883 8083 8084 18083 4369 6000-6999
+EXPOSE 1883 8883 8083 8084 8080 18083 4369 6000-6999
